@@ -2,6 +2,7 @@ var MaterialManagementSystem =  {};
 MaterialManagementSystem.DataSelectionModal = MaterialManagementSystem.DataSelectionModal || {};
 
 MaterialManagementSystem.DataSelectionModal = function (targetContainerSelector, options) {
+    var self = this;
     if(!targetContainerSelector)
         throw "Invalid container selector";
     if(!options)
@@ -11,13 +12,19 @@ MaterialManagementSystem.DataSelectionModal = function (targetContainerSelector,
     var properties = options.properties || [];
     var renderCallbacks = options.renderCallbacks || [];
     var columnConfig = this.initColumns(columnHeaders, properties, data, renderCallbacks);
+    var options
     this.isMultiSelect = options.isMultiSelect;
     options.order = options.order || [];
     if(options.order[0])
         throw "Invalid order index, must be greater than 0";
     var order = options.order || [1,'asc'];
-    return $(targetContainerSelector).DataTable({
+    this.table = $(targetContainerSelector).DataTable({
+        buttons: [
+            'selectAll',
+            'selectNone'
+        ],
         stateSave : true,
+        stateSaveCallback : this.saveState,
         columns : columnConfig.columns,
         columnDefs : columnConfig.columnDefs,
         data : columnConfig.data,
@@ -35,11 +42,11 @@ MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (co
     if(!data || !(data instanceof Array))
         throw "data is not an array";
     else if(!columnHeaders || !(columnHeaders instanceof Array))
-        throw "column headers is not an array";
+        throw "columnHeaders is not an array";
     else if( !dataProperties || !(dataProperties instanceof Array))
-        throw "data properties is not an array";
+        throw "dataProperties is not an array";
     else if(!renderCallBacks instanceof Array && renderCallBacks!==null)
-        throw "data properties is not an array";
+        throw "renderCallBacks is not an array";
     else if(columnHeaders.length!==dataProperties.length)
         throw "length of both column headers and data properties must match";
     else{
@@ -47,11 +54,11 @@ MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (co
         var columnTargetsWithNumericalContent = [];
         columnHeaders.unshift(" ");
         dataProperties.unshift("checked");
-        renderCallBacks.unshift(function(){return "";});
+        renderCallBacks = renderCallBacks || [];
         for(var i = 0; i < columnHeaders.length; i ++){
             var header = columnHeaders[i];
             var property = dataProperties[i];
-            var callback = renderCallBacks[i]|null;
+            var callback = i===0?function(){return "";}:renderCallBacks[i]|null;
             if(!header instanceof String){
                 throw "Headers must be a string";
             }
@@ -81,4 +88,9 @@ MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (co
         columnDefs : columnDefs,
         data : data
     }
+};
+
+
+MaterialManagementSystem.DataSelectionModal.prototype.saveState = function (data) {
+    console.log(data);
 };
