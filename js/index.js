@@ -11,7 +11,7 @@ MaterialManagementSystem.DataSelectionModal = function (targetContainerSelector,
     var properties = options.properties || [];
     var renderCallbacks = options.renderCallbacks || [];
     var columnConfig = this.initColumns(columnHeaders, properties, data, renderCallbacks);
-    var isMultiSelect = options.isMultiSelect;
+    this.isMultiSelect = options.isMultiSelect;
     options.order = options.order || [];
     if(options.order[0])
         throw "Invalid order index, must be greater than 0";
@@ -23,8 +23,8 @@ MaterialManagementSystem.DataSelectionModal = function (targetContainerSelector,
         data : columnConfig.data,
         order : order,
         select : {
-            style : isMultiSelect? 'mutli-shit' : 'single',
-            selector: isMultiSelect? 'td:first-child' : ''
+            style : this.isMultiSelect? 'mutli-shit' : 'single',
+            selector: this.isMultiSelect? 'td:first-child' : ''
         }
     });
 };
@@ -45,11 +45,13 @@ MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (co
     else{
         var firstEntryObject = data[0] || {}; // Getting a sample object of the data
         var columnTargetsWithNumericalContent = [];
-        var callbacks = renderCallBacks;
+        columnHeaders.unshift(" ");
+        dataProperties.unshift("checked");
+        renderCallBacks.unshift(function(){return "";});
         for(var i = 0; i < columnHeaders.length; i ++){
             var header = columnHeaders[i];
             var property = dataProperties[i];
-            var callback = i===0?function(){return''}:callbacks[i]|null;
+            var callback = renderCallBacks[i]|null;
             if(!header instanceof String){
                 throw "Headers must be a string";
             }
