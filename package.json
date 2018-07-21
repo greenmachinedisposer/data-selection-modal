@@ -1,0 +1,23 @@
+{
+  "name": "data-selection-modal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greenmachinedisposer/data-selection-modal.git"
+  },
+  "author": "Jurol James Cabaluna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/greenmachinedisposer/data-selection-modal/issues"
+  },
+  "homepage": "https://github.com/greenmachinedisposer/data-selection-modal#readme",
+  "dependencies": {
+    "datatable": "^2.0.2",
+    "jquery": "^3.3.1"
+  }
+}

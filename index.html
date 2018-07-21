@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Selection Modal</title>
+</head>
+<body>
+ <div>
+     <table id="table-list"></table>
+ </div>
+
+
+<link rel="stylesheet" href="plugins/data-table/jquery.dataTables.min.css"/>
+<link rel="stylesheet" href="plugins/data-table/select.dataTables.min.css"/>
+<script src="plugins/jquery/dist/jquery.min.js"></script>
+<script src="plugins/data-table/jquery.dataTables.min.js"></script>
+<script src="plugins/data-table/dataTables.select.min.js"></script>
+<script src="js/index.js"></script>
+<script>
+    var data = [
+        {
+            all : "Jurol",
+            please : 1
+        },
+        {
+            all : "Jurol",
+            please : 1
+        }
+    ];
+    var table = new MaterialManagementSystem.DataSelectionModal('#table-list', {
+        headers : [' ', 'All', 'Please'],
+        properties : ['checked', 'all', 'please'],
+        data : data,
+        isMultiSelect : false
+
+    });
+</script>
+</body>
+</html>
