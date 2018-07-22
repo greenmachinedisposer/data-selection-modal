@@ -6,6 +6,8 @@ MaterialManagementSystem.DataSelectionModal = function (targetContainerSelector,
     var columnConfig = this.initColumns(opt.columnHeaders, opt.properties, opt.data, opt.renderCallbacks);
     this.isMultiSelect = options.isMultiSelect;
     var order = options.order || [1,'asc'];
+
+    $.fn.dataTable.ext.errMode = 'none';
     this.table = $(targetContainerSelector).DataTable({
         dom: 'lfrtipSB',
         buttons : ['selectAll', 'selectNone'],
@@ -19,18 +21,25 @@ MaterialManagementSystem.DataSelectionModal = function (targetContainerSelector,
             style : this.isMultiSelect? 'mutli-shit' : 'single',
             selector: this.isMultiSelect? 'td:first-child' : ''
         }
+    }).on('error.dt',function (e,settings, techNote, message) {
+        console.log( 'An error has been reported by DataTables: ', message );
     });
+
+
+
+    return this.table;
+};
+var renderDefault = function (data) {
+    var toBeRendered;
+    if(!data)
+        toBeRendered = "";
+    else
+        toBeRendered = data;
+    return toBeRendered
 };
 
 MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (columnHeaders, dataProperties, data, renderCallBacks) {
-    var renderDefault = function (data) {
-        var toBeRendered;
-        if(!data)
-            toBeRendered = "";
-        else
-            toBeRendered = data;
-        return toBeRendered
-    };
+
     var columns = [];
     var columnDefs = [];
     if(!data || !(data instanceof Array))
@@ -49,7 +58,7 @@ MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (co
         columnHeaders.unshift(" ");
         dataProperties.unshift("checked");
         renderCallBacks = renderCallBacks || [];
-        renderCallBacks.push(renderDefault);
+        renderCallBacks.unshift(renderDefault);
         for(var i = 0; i < columnHeaders.length; i ++){
             var header = columnHeaders[i];
             var property = dataProperties[i];
@@ -77,7 +86,7 @@ MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (co
 };
 
 MaterialManagementSystem.DataSelectionModal.prototype.saveState = function (data) {
-    console.log(data);
+    console.log();
 };
 
 MaterialManagementSystem.DataSelectionModal.prototype.validateParameters = function (targetContainerSelector, options) {

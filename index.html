@@ -23,7 +23,8 @@
             okibaNo : 1,
             okibaName : "Location 1",
             factoryNo : 1,
-            factoryKind : "Factory 1"
+            factoryKind : "Factory 1",
+            color : "red"
         },
         {
             okibaNo : 2,
@@ -34,17 +35,18 @@
         {
             okibaNo : "3",
             okibaName : "Location 3",
-            factoryNo : "2",
-            factoryKind : "Factory 2"
+            factoryNo : "2"
         }
     ];
     var dataSelection = new MaterialManagementSystem.DataSelectionModal('#table-list', {
-        headers : ['Location no', 'Location Name', 'Factory No', 'Factory Name'],
-        properties : ['okibaNo','okibaName', 'factoryNo', 'factoryKind'],
+        headers : ['Location no', 'Location Name', 'Factory No', 'Factory Name','Color'],
+        properties : ['okibaNo','okibaName', 'factoryNo', 'factoryKind','color'],
         data : data,
-        isMultiSelect : true
+        isMultiSelect : true,
+        renderCallbacks : [renderDefault,renderDefault,renderDefault, renderDefault, function(data){if(data==='red')return 'I am red ';}]
 
     });
+
 </script>
 </body>
 </html>
