@@ -2,27 +2,13 @@ var MaterialManagementSystem =  {};
 MaterialManagementSystem.DataSelectionModal = MaterialManagementSystem.DataSelectionModal || {};
 
 MaterialManagementSystem.DataSelectionModal = function (targetContainerSelector, options) {
-    var self = this;
-    if(!targetContainerSelector)
-        throw "Invalid container selector";
-    if(!options)
-        throw "Must specify options";
-    var data = options.data || [];
-    var columnHeaders = options.headers || [];
-    var properties = options.properties || [];
-    var renderCallbacks = options.renderCallbacks || [];
-    var columnConfig = this.initColumns(columnHeaders, properties, data, renderCallbacks);
-    var options
+    var opt = this.validateParameters(targetContainerSelector, options);
+    var columnConfig = this.initColumns(opt.columnHeaders, opt.properties, opt.data, opt.renderCallbacks);
     this.isMultiSelect = options.isMultiSelect;
-    options.order = options.order || [];
-    if(options.order[0])
-        throw "Invalid order index, must be greater than 0";
     var order = options.order || [1,'asc'];
     this.table = $(targetContainerSelector).DataTable({
-        buttons: [
-            'selectAll',
-            'selectNone'
-        ],
+        dom: 'lfrtipSB',
+        buttons : ['selectAll', 'selectNone'],
         stateSave : true,
         stateSaveCallback : this.saveState,
         columns : columnConfig.columns,
@@ -37,6 +23,14 @@ MaterialManagementSystem.DataSelectionModal = function (targetContainerSelector,
 };
 
 MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (columnHeaders, dataProperties, data, renderCallBacks) {
+    var renderDefault = function (data) {
+        var toBeRendered;
+        if(!data)
+            toBeRendered = "";
+        else
+            toBeRendered = data;
+        return toBeRendered
+    };
     var columns = [];
     var columnDefs = [];
     if(!data || !(data instanceof Array))
@@ -55,24 +49,17 @@ MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (co
         columnHeaders.unshift(" ");
         dataProperties.unshift("checked");
         renderCallBacks = renderCallBacks || [];
+        renderCallBacks.push(renderDefault);
         for(var i = 0; i < columnHeaders.length; i ++){
             var header = columnHeaders[i];
             var property = dataProperties[i];
-            var callback = i===0?function(){return "";}:renderCallBacks[i]|null;
+            var callback = renderCallBacks[i];
             if(!header instanceof String){
                 throw "Headers must be a string";
             }
             else {
                 var column = {};
                 if(firstEntryObject instanceof Object){
-                    var columnData = firstEntryObject[property] || '';
-                    if(!isNaN(columnData.data)){
-                        // Shift all data index to the right to allocate for Checkboxes/Radio buttons on the first column
-                        columnTargetsWithNumericalContent.push(i+1);
-                    }
-                    else{
-                        //DO NOTHING
-                    }
                     column.title = header;
                     column.data = property;
                     if(callback) column.render = callback;
@@ -80,8 +67,7 @@ MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (co
                 }
             }
         }
-        columnDefs.push({target : 0, orderable: false, searchable: false, className: 'select-radio'});
-        columnDefs.push({target : columnTargetsWithNumericalContent, className: 'numeric-cell-content'});
+        columnDefs.push({targets : [0], orderable: false, searchable: false, className: 'select-checkbox'});
     }
     return {
         columns : columns,
@@ -90,7 +76,27 @@ MaterialManagementSystem.DataSelectionModal.prototype.initColumns = function (co
     }
 };
 
-
 MaterialManagementSystem.DataSelectionModal.prototype.saveState = function (data) {
     console.log(data);
+};
+
+MaterialManagementSystem.DataSelectionModal.prototype.validateParameters = function (targetContainerSelector, options) {
+    if(!targetContainerSelector)
+        throw "Invalid container selector";
+    if(!options)
+        throw "Must specify options";
+    var data = options.data || [];
+    var columnHeaders = options.headers || [];
+    var properties = options.properties || [];
+    var renderCallbacks = options.renderCallbacks || [];
+    options.order = options.order || [];
+    if(options.order[0])
+        throw "Invalid order index, must be greater than 0";
+
+    return {
+        data : data,
+        columnHeaders : columnHeaders,
+        properties : properties,
+        renderCallbacks : renderCallbacks
+    }
 };

@@ -3,40 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Data Selection Modal</title>
+
 </head>
+<style>
+    td.numeric-cell-content{
+        text-align: right;
+    }
+</style>
 <body>
- <div>
-     <table id="table-list"></table>
-     <button id="state-table"></button>
+ <div class="col-md-12 form-group">
+     <table id="table-list" class="dataTable hovered table-bordered"></table>
  </div>
-
-
-<link rel="stylesheet" href="plugins/data-table/jquery.dataTables.min.css"/>
-<link rel="stylesheet" href="plugins/data-table/select.dataTables.min.css"/>
-<script src="plugins/jquery/dist/jquery.min.js"></script>
-<script src="plugins/data-table/jquery.dataTables.min.js"></script>
-<script src="plugins/data-table/dataTables.select.min.js"></script>
+ <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/sl-1.2.6/datatables.min.css"/>
+ <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/sl-1.2.6/datatables.min.js"></script>
 <script src="js/index.js"></script>
 <script>
     var data = [
         {
-            all : "Jurol",
-            please : 1
+            okibaNo : 1,
+            okibaName : "Location 1",
+            factoryNo : 1,
+            factoryKind : "Factory 1"
         },
         {
-            all : "Jurol",
-            please : 2
+            okibaNo : 2,
+            okibaName : "Location 2",
+            factoryNo : 3,
+            factoryKind : "Factory 3"
+        },
+        {
+            okibaNo : "3",
+            okibaName : "Location 3",
+            factoryNo : "2",
+            factoryKind : "Factory 2"
         }
     ];
     var dataSelection = new MaterialManagementSystem.DataSelectionModal('#table-list', {
-        headers : ['All', 'Please'],
-        properties : ['all', 'please'],
+        headers : ['Location no', 'Location Name', 'Factory No', 'Factory Name'],
+        properties : ['okibaNo','okibaName', 'factoryNo', 'factoryKind'],
         data : data,
-        isMultiSelect : false
+        isMultiSelect : true
 
     });
-
-
 </script>
 </body>
 </html>
