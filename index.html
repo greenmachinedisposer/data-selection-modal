@@ -18,6 +18,10 @@
  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.18/b-1.5.2/b-html5-1.5.2/sl-1.2.6/datatables.min.js"></script>
 <script src="js/index.js"></script>
 <script>
+    var data = {groups : ["admin"], page : window.location.href};
+    $.post("config.php", data , function( data ) {
+        console.log(JSON.parse(data).host);
+    });
     var data = [
         {
             okibaNo : 1,
@@ -43,7 +47,7 @@
         properties : ['okibaNo','okibaName', 'factoryNo', 'factoryKind','color'],
         data : data,
         isMultiSelect : true,
-        renderCallbacks : [renderDefault,renderDefault,renderDefault, renderDefault, function(data){if(data==='red')return 'I am red ';}]
+        renderCallbacks : [null,null,null,null,function(data){if(data==='red')return 'I am red ';}]
 
     });
 
